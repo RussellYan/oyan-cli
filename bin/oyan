@@ -1,0 +1,49 @@
+#! /usr/bin/env node
+
+console.log('oyan-cli');
+
+// 1. 配置可执行命令 commander
+  const program = require('commander');
+  // 配置颜色
+  const chalk = require('chalk');
+  program
+    .command('create <app-name>')
+    .description('create a new project')
+    .option('-f, --force', 'overwrite target directory if it exists')
+    .action((name, option, cmd) => {
+      // console.log(name, cmd);
+      // console.log(option);
+      require('../lib/create')(name, option);
+    })
+
+  program
+    .command('config [value]')
+    .description('inspect and modify')
+    .option('-g, --get <path>', 'get value from option')
+    .option('-s, --set <path> <value>')
+    .option('-d, --delete <path>', 'delete option from config')
+    .action((value, option, cmd) => {
+      console.log(value, option);
+    })
+
+  program
+    .command('ui')
+    .description('start and open oyan-cli ui')
+    .option('-p, --port <port>', 'Port used for the UI Server')
+    .action((option) => {
+      console.log(option);
+    })
+
+  program
+    .version(`zhufeng-cli@${require('../package.json').version}`)
+    .usage(`<command> [option]`)
+
+  program.on('--help', function() {
+    console.log(`Run ${chalk.cyan('oyan-cli <command> --help')} show details`);
+  })
+
+  // 解析用户执行命令出入的参数
+  program.parse(process.argv);
+// 2. 要实现脚手架，先做一个个命令交互的功能 inquirer
+// 3. 将模板下载下来 download-git-repo
+// 4. 根据用户的选中动态地生成内容 metalsmith
